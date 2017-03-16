@@ -3,27 +3,30 @@ package com.ajbe.primerparcialdnt.presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.ajbe.primerparcialdnt.R;
-import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
-import com.pes.androidmaterialcolorpickerdialog.ColorPickerCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ColorChooserDialog.ColorCallback {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.content_main) ConstraintLayout layout;
-
-    private ColorPicker mColorPicker;
+    // Roots
+    private int a, b, c;
+    private double root1;
+    private double root2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
-        mColorPicker = new ColorPicker(this);
     }
 
     @Override
@@ -67,18 +68,79 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void actionRoots() {
-        Toast.makeText(this, "jEJE Roots", Toast.LENGTH_SHORT).show();
+        new MaterialDialog.Builder(this)
+                .title("Polinomios")
+                .content("Digita a")
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input("a", null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        a = Integer.parseInt(input.toString());
+                        showBDialog();
+                    }
+                }).show();
+    }
+
+    private void showBDialog() {
+        new MaterialDialog.Builder(MainActivity.this)
+                .title("Polinomios")
+                .content("Digita b")
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input("b", null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        b = Integer.parseInt(input.toString());
+                        showCDialog();
+                    }
+                }).show();
+    }
+
+    private void showCDialog() {
+        new MaterialDialog.Builder(MainActivity.this)
+                .title("Polinomios")
+                .content("Digita c")
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input("c", null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        c = Integer.parseInt(input.toString());
+                        showResult();
+                    }
+                }).show();
+
+    }
+
+    private void showResult() {
+        calculateRoots();
+        new MaterialDialog.Builder(this)
+                .title("La raices son")
+                .content("x1: "+ root1 +"\n x2: "+root2)
+                .positiveText("Cerrar")
+                .show();
+    }
+
+    private void calculateRoots() {
+        root1 = (-b + Math.sqrt(Math.pow(b, 2) - (4 * a * c))) / (2 * a);
+        root2 = (-b - Math.sqrt(Math.pow(b, 2) - (4 * a * c))) / (2 * a);
     }
 
     private void changeBackground() {
-        mColorPicker.show();
-        mColorPicker.setCallback(new ColorPickerCallback() {
-            @Override
-            public void onColorChosen(@ColorInt int color) {
-                layout.setBackgroundColor(color);
-                mColorPicker.cancel();
-            }
-        });
+        // Pass AppCompatActivity which implements ColorCallback, along with the title of the dialog
+        new ColorChooserDialog.Builder(this, R.string.title_color)
+                .doneButton(R.string.md_done_label)
+                .cancelButton(R.string.md_cancel_label)
+                .backButton(R.string.md_back_label)
+                .dynamicButtonColor(true)
+                .show();
     }
 
+    @Override
+    public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
+        layout.setBackgroundColor(selectedColor);
+    }
+
+    @Override
+    public void onColorChooserDismissed(@NonNull ColorChooserDialog dialog) {
+
+    }
 }

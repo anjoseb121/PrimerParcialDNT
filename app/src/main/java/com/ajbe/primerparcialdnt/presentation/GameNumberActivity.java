@@ -1,7 +1,6 @@
 package com.ajbe.primerparcialdnt.presentation;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,11 +10,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.ajbe.primerparcialdnt.R;
 import com.ajbe.primerparcialdnt.utils.RandomUtils;
-
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
