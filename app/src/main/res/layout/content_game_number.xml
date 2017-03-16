@@ -44,9 +44,9 @@
             android:id="@+id/edit_answer"
             android:hint="Un numero entre 0 y 100"
             android:inputType="number"
-            android:maxLines="3"
-            android:minLines="0"
-            android:text="0"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:minLines="1"
             android:fontFamily="sans-serif-condensed"/>
     </android.support.design.widget.TextInputLayout>
 

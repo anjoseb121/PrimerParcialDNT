@@ -2,18 +2,17 @@ package com.ajbe.primerparcialdnt.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.ColorInt;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.ajbe.primerparcialdnt.R;
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
+import com.pes.androidmaterialcolorpickerdialog.ColorPickerCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +21,9 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.content_main) ConstraintLayout layout;
+
+    private ColorPicker mColorPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        mColorPicker = new ColorPicker(this);
     }
 
     @Override
@@ -53,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.button_number)
-    public void goToNumbers(View v) {
-        startActivity(new Intent(v.getContext(), GameNumberActivity.class));
+    public void goToNumbers() {
+        startActivity(new Intent(this, GameNumberActivity.class));
     }
 
     @OnClick(R.id.button_mcd_mcm)
-    public void goToMath(View v) {
-        startActivity(new Intent(v.getContext(), MathActivity.class));
+    public void goToMath() {
+        startActivity(new Intent(this, MathActivity.class));
     }
 
     private void actionRoots() {
@@ -67,7 +71,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void changeBackground() {
-        Toast.makeText(this, "Jeje background", Toast.LENGTH_SHORT).show();
+        mColorPicker.show();
+        mColorPicker.setCallback(new ColorPickerCallback() {
+            @Override
+            public void onColorChosen(@ColorInt int color) {
+                layout.setBackgroundColor(color);
+                mColorPicker.cancel();
+            }
+        });
     }
 
 }

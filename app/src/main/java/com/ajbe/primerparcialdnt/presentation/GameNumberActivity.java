@@ -22,11 +22,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class GameNumberActivity extends AppCompatActivity {
-
+    // Bind views with knife
     @BindView(R.id.container_hearts) LinearLayout containerHearts;
     @BindView(R.id.button_play) Button buttonPlay;
     @BindView(R.id.edit_answer) EditText editAnswer;
-
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    // init game values
     private int mHearts = 0;
     private int max = 100;
     private int min = 0;
@@ -36,8 +37,8 @@ public class GameNumberActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_number);
+        // Execute binds
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null)
@@ -45,32 +46,39 @@ public class GameNumberActivity extends AppCompatActivity {
 
         // Generate random answer
         answer = RandomUtils.getRandomInteger(max, min);
-        //Toast.makeText(this, "Respuesta: "+answer, Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.button_play)
     public void guestNumber(View v) {
+        // If is empty editText
+        if (editAnswer.getText().length() == 0) {
+            editAnswer.setError("No puede estar vacio");
+            return;
+        }
+        // Get user input to integer
         int usersNumber = Integer.parseInt(editAnswer.getText().toString());
-
+        // If equals to random answer: won
         if (usersNumber == answer)
             youWon(v);
         else if (usersNumber > answer) {
-            Toast.makeText(this, "Este número es mayor que la respuesta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "El numero digitado es mayor que la respuesta", Toast.LENGTH_SHORT).show();
             hasLive(v);
         }
         else if (usersNumber < answer) {
-            Toast.makeText(this, "Este numero es menor que la respuesta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "El numero digitado es menor que la respuesta", Toast.LENGTH_SHORT).show();
             hasLive(v);
         }
     }
 
     private void hasLive(View v) {
+        // get hearts container and remove one heart by position mHearts
         if (mHearts < containerHearts.getChildCount()) {
             containerHearts.getChildAt(mHearts).setVisibility(View.GONE);
             mHearts++;
         }
+        // if position equal to total hearts you lose
         if (mHearts == containerHearts.getChildCount()){
-            Snackbar.make(v, "Perdiste", Snackbar.LENGTH_INDEFINITE).show();
+            Snackbar.make(v, "Perdiste, la respuesta era "+answer, Snackbar.LENGTH_INDEFINITE).show();
             buttonPlay.setEnabled(false);
             buttonPlay.setText("Perdiste");
         }
